@@ -41,6 +41,10 @@ own assignment.
 Festive and playful: crimson and coral red headers, white rounded cards, and glossy
 3D Christmas illustrations. See [`docs/ART_DIRECTION.md`](docs/ART_DIRECTION.md).
 
+Illustrations are [Microsoft Fluent Emoji](https://github.com/microsoft/fluentui-emoji)
+3D assets (MIT license), stored in `public/illustrations/`. Credits are in
+[`public/illustrations/CREDITS.md`](public/illustrations/CREDITS.md).
+
 ## Tech stack
 
 | Layer | Choice |

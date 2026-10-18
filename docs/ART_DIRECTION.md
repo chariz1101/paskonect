@@ -190,18 +190,66 @@ How each pattern from the pegs maps onto Paskonect's screens.
 ## 7. Illustration
 
 The pegs' biggest personality comes from **glossy 3D clay-style illustrations**:
-Santa, reindeer, snowman, trees, bells, gifts, hats, candy canes.
+Santa, reindeer, snowman, trees, bells, gifts, candy.
 
-- **Where:** hero sections, empty states, the reveal moment, category chips (as
-  small round icons).
+### Source: Microsoft Fluent Emoji 3D (already in the repo)
+
+We don't make or buy custom illustrations. We use
+[Microsoft Fluent Emoji](https://github.com/microsoft/fluentui-emoji) in their 3D
+style: free, MIT-licensed, and the same glossy, soft, front-lit look as the pegs.
+
+29 assets are already in [`public/illustrations/`](../public/illustrations/), with
+sources and license in [`CREDITS.md`](../public/illustrations/CREDITS.md).
+
+![Illustration set](references/illustration-set.png)
+
+### Where each one goes
+
+| Screen / use | Illustrations |
+|---|---|
+| Landing hero | `santa`, `christmas-tree`, `gift`, `deer`, `glowing-star`, `snowflake` |
+| Join page | `gift`, `ribbon`, `sparkles` |
+| Personal link / "save this link" | `key` (the token is your door key), `link` |
+| Reveal moment | `gift` → `party-popper`, `confetti-ball`, `sparkles` |
+| Pre-draw reveal state ("Names not drawn yet") | `hourglass`, `shushing-face` |
+| Invalid or revoked link | `locked` |
+| Room locked after draw | `locked`, `check` |
+| Email recovery | `envelope` |
+| Weekly themes timeline | `calendar`, plus a theme icon per week (`socks`, `cookie`, `candle`, `candy`…) |
+| Dashboard "Viewed" status | `eyes` |
+| Validation panel | `check` |
+| Empty roster | `snowman` |
+| Search / no results | `magnifier`, `snowman-plain` |
+| Category-style chips (roster filters, theme tags) | Any, at 24–32px inside a round chip |
+
+### Working within the 256px limit
+
+Every asset is 256×256. On a 2x phone screen that stays sharp up to **128 CSS px**.
+So:
+
+- **Never show a single illustration larger than 128px.** Don't upscale.
+- **Build heroes as compositions, not one big picture.** Cluster 3–6 illustrations
+  at different sizes (48–128px), slightly rotated (−12° to 12°) and overlapping,
+  like the scattered gifts and stars in Peg 2's onboarding screen. Make the
+  centerpiece the largest (128px) and keep the others smaller around it.
+- **Fill the space with CSS, not images:** blurred coral circles behind the cluster
+  (`blur(40px)`, `coral-300` at 60%), white "snow" dots like Peg 2's product hero,
+  and the faint ornament pattern from Peg 1's header.
+- **Soft drop shadow** under each cluster item: `drop-shadow(0 8px 12px rgba(120, 10, 11, 0.25))`.
+- Build these as one reusable `<HeroCluster>` component that takes a list of
+  `{ src, size, x, y, rotate }`.
+
+### Rules
+
+- **Where:** hero sections, empty states, the reveal moment, status states, chips.
 - **Never:** inside dense UI like tables or forms.
-- **Style:** soft, glossy, rounded, bright, front-lit, with transparent backgrounds.
-  No flat vector clip art, no photos.
-- **Format:** transparent WebP or PNG, exported at 2x. Hero art under ~150KB.
-- **Sourcing:** check licenses before use. Options include licensed 3D icon packs
-  (e.g. Christmas sets on IconScout or Freepik with a commercial license), or
-  rendering our own in Blender or Spline. Keep a `public/illustrations/CREDITS.md`
-  listing where each asset came from.
+- **Don't mix styles:** no flat vector clip art, no photos, no other emoji sets.
+- **Format:** use `next/image` with explicit `width`/`height`. Mark decorative
+  ones `alt=""`.
+- **Adding more:** take another Fluent Emoji 3D asset (check its `3D/` folder),
+  convert it to WebP and add a row to `CREDITS.md`.
+- **Gaps in the set:** there is no candy cane, wreath or Santa hat. Use `candy`,
+  `ribbon` and `santa` instead.
 
 ### Iconography
 

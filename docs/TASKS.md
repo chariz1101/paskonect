@@ -8,9 +8,10 @@ Details for each item are in [`SPEC.md`](SPEC.md). Visual rules are in
 
 ## Sprint 0 — Design setup
 
-- [ ] Source or render the 3D illustration set (Santa, reindeer, snowman, tree, bell, gift, hat, candy cane)
-- [ ] Check licenses and record every asset in `public/illustrations/CREDITS.md`
-- [ ] Export illustrations as transparent WebP at 2x, hero art under ~150KB
+- [x] Get a 3D illustration set: Microsoft Fluent Emoji 3D (MIT), 29 assets in `public/illustrations/`
+- [x] Record sources and license in `public/illustrations/CREDITS.md`
+- [ ] Build the `<HeroCluster>` component for composing heroes from several illustrations (max 128px each)
+- [ ] Compose the landing, join and reveal hero clusters
 - [ ] Add color, radius, shadow and font tokens to the Tailwind config
 - [ ] Load Plus Jakarta Sans with `next/font/google`
 - [ ] Build base components: button (primary gradient, secondary outline), pill chip, card, input, icon button
