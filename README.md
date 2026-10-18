@@ -36,6 +36,11 @@ own assignment.
 - **Lost links can be recovered** through a browser cookie, email (if provided), or
   a fresh link from the organizer. A new link doesn't change the assignment.
 
+## Look and feel
+
+Festive and playful: crimson and coral red headers, white rounded cards, and glossy
+3D Christmas illustrations. See [`docs/ART_DIRECTION.md`](docs/ART_DIRECTION.md).
+
 ## Tech stack
 
 | Layer | Choice |
@@ -70,3 +75,6 @@ Next.js project, database and auth are in place.
 
 - [`docs/SPEC.md`](docs/SPEC.md): full project specification (scope, principles,
   architecture, data model, user flows, sprints, testing, open questions)
+- [`docs/ART_DIRECTION.md`](docs/ART_DIRECTION.md): visual style (colors, type,
+  shapes, illustration, motion) and how the reference designs map to our screens
+- [`docs/TASKS.md`](docs/TASKS.md): checklist of everything to build, by sprint
