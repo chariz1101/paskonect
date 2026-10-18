@@ -213,6 +213,12 @@ sources and license in [`CREDITS.md`](../public/illustrations/CREDITS.md).
 | Reveal moment | `gift` → `party-popper`, `confetti-ball`, `sparkles` |
 | Pre-draw reveal state ("Names not drawn yet") | `hourglass`, `shushing-face` |
 | Invalid or revoked link | `locked` |
+| Room deleted by the organizer | `locked`, `snowman-plain` |
+| Exchange ended (room expired) | `calendar`, `snowman-plain` |
+| You left the room | `snowman-plain` |
+| "Your assignment changed" | `gift`, `sparkles` |
+| Expiry warning banner | `hourglass` |
+| History panel | `calendar` |
 | Room locked after draw | `locked`, `check` |
 | Email recovery | `envelope` |
 | Weekly themes timeline | `calendar`, plus a theme icon per week (`socks`, `cookie`, `candle`, `candy`…) |

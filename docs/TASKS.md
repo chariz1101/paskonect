@@ -34,7 +34,8 @@ Details for each item are in [`SPEC.md`](SPEC.md). Visual rules are in
 - [ ] Create the `rooms` table
 - [ ] Sign up, sign in and sign out flows
 - [ ] Landing page using the onboarding layout ("Ho-HO-HO!" + "Create a room")
-- [ ] Create room form: name, budget amount, currency (default PHP)
+- [ ] Create room form: name, party date, budget amount, currency (default PHP)
+- [ ] Store `party_date` and compute `expires_at` (end of day, party date + 14 days)
 - [ ] Room code generator with an unambiguous alphabet (no `0/O`, `1/I/l`), format `PASKO-XXXX`
 - [ ] Organizer's room list
 - [ ] Deploy to Vercel with environment variables and the live database
@@ -59,6 +60,8 @@ Details for each item are in [`SPEC.md`](SPEC.md). Visual rules are in
 - [ ] Wishlist editing via the personal link
 - [ ] Rate limit join attempts per IP
 - [ ] Reject joins when the room isn't open
+- [ ] Add `left_at` to `participants`
+- [ ] "Leave room" button before the draw, with confirmation; leaver drops off the roster
 
 **Done when:** five people on five devices join from one link and all appear in the roster with wishlists.
 
@@ -77,6 +80,8 @@ Write the tests first.
 - [ ] Unit test: unsatisfiable exclusions return an error naming the failing pair
 - [ ] Unit test: fewer than four participants is rejected
 - [ ] Create the `assignments` table with `unique (room_id, giver_id)` and `unique (room_id, receiver_id)`
+- [ ] Create the `assignment_snapshots` and `room_events` tables
+- [ ] The first draw saves snapshot version 1 and a `drawn` event
 - [ ] Sattolo shuffle using `crypto.randomInt` (`j < i`, not `j ≤ i`)
 - [ ] Exclusion re-roll loop with a 10,000-attempt cap
 - [ ] Exclusion rules UI for marking pairs
@@ -103,7 +108,7 @@ Write the tests first.
 - [ ] Invalid token state with its own message
 - [ ] Revoked token state with its own message
 - [ ] Pre-draw token state with its own message
-- [ ] Audit: grep every reference to `assignments` and confirm each is reachable only through a token
+- [ ] Audit: grep every reference to `assignments` and `assignment_snapshots` and confirm none is ever read into a session response
 - [ ] Confirm the token cookie is httpOnly
 
 **Done when:** two people on two devices each see exactly one assignment, and swapping tokens between browsers shows the other person's.
@@ -122,6 +127,44 @@ Write the tests first.
 - [ ] Weekly theme schedule as a vertical timeline, visible to the whole room
 - [ ] Santa speech-bubble announcements (e.g. "Names drawn!")
 - [ ] Budget display on join and reveal pages
+
+**Leaving after the draw**
+
+- [ ] "Leave room" after the draw stamps `left_at` and flags the room as having a gap
+- [ ] Dashboard banner asking the organizer to close the gap or redraw
+- [ ] Close the gap: the leaver's giver takes over the leaver's receiver, server-side, boolean summary only
+- [ ] Redraw everyone still in the room
+- [ ] Block both when fewer than four remain; offer emergency reveal or delete instead
+- [ ] Block close the gap if it breaks an exclusion rule; suggest redraw
+- [ ] Affected giver's page: "Your person left, the organizer is sorting it out"
+- [ ] Stamp `assignment_changed_at` and clear `viewed_at` for anyone whose receiver changed
+- [ ] "Your assignment changed" notice on the reveal page
+
+**History and restore**
+
+- [ ] Save a snapshot and a `room_events` row before every change to `assignments`
+- [ ] History panel listing versions from `room_events` only (no pairings)
+- [ ] Restore a version: save the current state first, copy the version back, bring back anyone who left after it
+- [ ] Restore confirmation warning that people may have already bought gifts
+
+**Deleting a room**
+
+- [ ] Delete room behind a typed confirmation (type the room name)
+- [ ] On delete: stamp `deleted_at`, scrub assignments, snapshots, themes, wishlists, names and emails
+- [ ] "The organizer deleted this room" page for personal links and the join link
+- [ ] Purge deleted-room leftovers after 30 days
+
+**Expiry**
+
+- [ ] Let the organizer change the party date; `expires_at` moves with it
+- [ ] Daily Vercel Cron job that expires due rooms (stamp `expired_at`, scrub data)
+- [ ] Expiry warnings 7, 3 and 1 day before, by email, tracked in `expiry_warnings_sent`
+- [ ] Expiry countdown banner on the dashboard
+- [ ] "This exchange has ended" page for links to expired rooms
+- [ ] Purge expired-room leftovers after 30 days
+
+**Polish**
+
 - [ ] Optional: "your recipient updated their wishlist" notification
 - [ ] Empty states with illustrations
 - [ ] Error states
@@ -136,14 +179,21 @@ Write the tests first.
 - [ ] Integration test: a token reaches exactly one assignment
 - [ ] Integration test: a revoked token reaches none
 - [ ] Integration test: a pre-draw token reaches none
-- [ ] Manual run: full exchange with four people on four devices
+- [ ] Integration test: a session can't read `assignment_snapshots` through any route
+- [ ] Integration test: tokens for left, deleted and expired rooms show the right page and no assignment
+- [ ] Unit test: close the gap keeps a single complete cycle and changes exactly one giver
+- [ ] Unit test: restore brings back the exact earlier version
+- [ ] Unit test: every change saves a snapshot first
+- [ ] Manual run: full exchange with five people on five devices
 - [ ] Manual run: one person deliberately loses their link and recovers it
+- [ ] Manual run: one person leaves after the draw, the gap is closed, then the earlier version is restored
 
-## Open questions
+## Decisions made
 
-Decide these before the sprint noted.
+- [x] Leaving before the draw: allowed
+- [x] Leaving after the draw: organizer chooses close the gap or redraw
+- [x] Dropping out mid-exchange: version history with restore
+- [x] Deleting a room: allowed; links show a "room deleted" page
+- [x] Expiry: two weeks after the party date, with 7/3/1-day warnings
 
-- [ ] Can participants leave before the draw? Does leaving after require a re-draw? *(before Sprint 5)*
-- [ ] What happens if someone drops out mid-exchange: emergency reveal plus manual reassignment, or automated re-draw of the affected segment? *(before Sprint 5)*
-- [ ] Can the organizer delete a room, and what happens to live participant links?
-- [ ] Do rooms expire, or persist indefinitely?
+Details are in section 5 and section 8 of [`SPEC.md`](SPEC.md).
